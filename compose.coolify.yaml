@@ -1,5 +1,8 @@
 # Zulip для Coolify (Docker Compose из приватного Git-репозитория).
 #
+# Образ Zulip — только готовый ghcr.io/zulip/zulip-server (без build на сервере): деплой — в основном
+# docker pull, без компиляции и с меньшими требованиями к RAM. Версию тега меняйте в image: ниже.
+#
 # Настройка Coolify
 # - Build Pack: Docker Compose; базовая директория — корень репозитория; файл: compose.coolify.yaml.
 # - Приватный GitHub: Deploy Key или GitHub App с доступом к репозиторию.
@@ -103,8 +106,6 @@ services:
   zulip:
     image: "ghcr.io/zulip/zulip-server:11.6-1"
     restart: unless-stopped
-    build:
-      context: .
     # Прокси Coolify ходит на контейнер; не публикуем 80/443/25 на хост (избегаем конфликта с Traefik).
     expose:
       - "80"
