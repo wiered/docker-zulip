@@ -1,14 +1,7 @@
 # Zulip для Coolify (Docker Compose из приватного Git-репозитория).
 #
 # Образ Zulip — только готовый ghcr.io/zulip/zulip-server (без build на сервере): деплой — в основном
-# docker pull, без компиляции и с меньшими требованиями к RAM, чем сборка образа. Версию тега меняйте в image: ниже.
-#
-# Ресурсы (ожидаемо, не баг «пребилда»):
-# - Готовый образ не убирает тяжёлый первый запуск: Puppet (десятки секунд CPU), сотни миграций Django, старт
-#   PostgreSQL/RabbitMQ/Redis — пик CPU/RAM и I/O нормален. После «=== End Initial Configuration Phase ===» нагрузка падает.
-# - В контейнере zulip supervisor поднимает много процессов (Django, Tornado, очереди, nginx, …) — это постоянная RAM.
-# - Официально для production Zulip рекомендуют ≥2 ГБ RAM под сам сервер; с БД и остальными сервисами комфортнее 3–4+ ГБ на VPS.
-# - Предупреждение «Unexpected environment variable HOST» даёт Coolify — можно игнорировать или убрать лишние env в UI.
+# docker pull, без компиляции и с меньшими требованиями к RAM. Версию тега меняйте в image: ниже.
 #
 # Настройка Coolify
 # - Build Pack: Docker Compose; базовая директория — корень репозитория; файл: compose.coolify.yaml.
@@ -135,8 +128,6 @@ services:
       # TLS на стороне Coolify; Zulip слушает HTTP :80 и доверяет заголовкам от прокси
       # https://zulip.readthedocs.io/projects/docker/en/latest/how-to/compose-ssl.html#deploying-behind-a-reverse-proxy
       TRUST_GATEWAY_IP: "True"
-      # Меньше RAM за счёт потоковых воркеров очередей вместо отдельных процессов (см. Compose: Providing settings)
-      CONFIG_application_server__queue_workers_multiprocess: false
       # Раскомментируйте при необходимости исходящей почты и задайте переменные в Coolify:
       # SETTING_EMAIL_HOST: ${SETTING_EMAIL_HOST:-}
       # SETTING_EMAIL_HOST_USER: ${SETTING_EMAIL_HOST_USER:-}
